@@ -9,8 +9,8 @@ Makefile
 
 # Build results
 build
-LC_MESSAGES
-*.mo
+# LC_MESSAGES  # Commented out to allow translation files to be committed
+# *.mo  # Commented out to allow translation files to be committed
 *.qm
 *.qmlc
 *.qsb
