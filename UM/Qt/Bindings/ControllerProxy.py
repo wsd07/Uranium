@@ -66,6 +66,29 @@ class ControllerProxy(QObject):
     def setActiveTool(self, tool):
         self._controller.setActiveTool(tool)
 
+    @pyqtSlot(str, str, "QVariant", result="QVariant")
+    def callToolMethod(self, tool_name, method_name, data=None):
+        """Call a method on a specific tool.
+
+        :param tool_name: The name of the tool
+        :param method_name: The name of the method to call
+        :param data: Optional data to pass to the method
+        :return: The result of the method call or None if failed
+        """
+        try:
+            tool = self._controller.getTool(tool_name)
+            if tool and hasattr(tool, method_name):
+                method = getattr(tool, method_name)
+                if callable(method):
+                    if data is not None:
+                        return method(data)
+                    else:
+                        return method()
+            return None
+        except Exception as e:
+            Logger.log("w", f"Failed to call method {method_name} on tool {tool_name}: {e}")
+            return None
+
     @pyqtSlot()
     def removeSelection(self):
         if not Selection.hasSelection():
